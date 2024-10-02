@@ -61,9 +61,49 @@ public class VilSnapshotTriggerService {
         return vilDashboardResponse;
     }
 
-//    public StatusResponseDto editVilSnapshot(VilSnapshotTrigger vilSnapshotTrigger){
-//        StatusResponseDto statusResponseDto = StatusResponseDto.builder().status(HttpStatus.OK.value()).build();
-//        Optional<VilSnapshotTrigger> vilSnapshotTrigger1 = vilSnapshotTrigger.fin
-//    }
+    public StatusResponseDto editVilSnapshot(VilSnapshotTrigger vilSnapshotTrigger){
+        StatusResponseDto statusResponseDto = StatusResponseDto.builder().status(HttpStatus.OK.value()).build();
+        Optional<VilSnapshotTrigger> snapshotTrigger = vilSnapshotRepository.findById(vilSnapshotTrigger.getId());
+        VilSnapshotTrigger snapshotTrigger1 = snapshotTrigger.get();
+        snapshotTrigger1.setModelYear(vilSnapshotTrigger.getModelYear());
+        snapshotTrigger1.setProgramCode(vilSnapshotTrigger.getProgramCode());
+        snapshotTrigger1.setDaysSinceLastVil(vilSnapshotTrigger.getDaysSinceLastVil());
+        String currentDate = TimeUtils.getCurrentSystemTimeStamp();
+        if (snapshotTrigger.isPresent()){
+            if (vilSnapshotTrigger.getTriggerStatus().equalsIgnoreCase("Edited and Disabled")){
+                snapshotTrigger1.setModified_Date(currentDate);
+                snapshotTrigger1.setEnabled(vilSnapshotTrigger.getEnabled());
+                snapshotTrigger1.setTriggerStatus("Edited and Disabled");
+                snapshotTrigger1.setStatus("Disabled");
+                vilSnapshotRepository.save(snapshotTrigger1);
+            }
+        } else if (vilSnapshotTrigger.getTriggerStatus().equalsIgnoreCase("New and Disabled")) {
+            snapshotTrigger1.setModified_Date(currentDate);
+            snapshotTrigger1.setEnabled(vilSnapshotTrigger.getEnabled());
+            snapshotTrigger1.setTriggerStatus("New and Disabled");
+            snapshotTrigger1.setStatus("New and Disabled");
+            vilSnapshotRepository.save(snapshotTrigger1);
+        } else if (vilSnapshotTrigger.getTriggerStatus().equalsIgnoreCase("Enabled")) {
+            snapshotTrigger1.setEnabled(false);
+            snapshotTrigger1.setDisabledDate(currentDate);
+            snapshotTrigger1.setTriggerStatus("Enabled");
+            snapshotTrigger1.setStatus("Enabled");
+            vilSnapshotRepository.save(snapshotTrigger1);
+
+
+        } else if (vilSnapshotTrigger.getTriggerStatus().equalsIgnoreCase("Disabled")) {
+            snapshotTrigger1.setEnabled(false);
+            snapshotTrigger1.setModified_Date(currentDate);
+            snapshotTrigger1.setTriggerStatus("Disabled");
+            snapshotTrigger1.setStatus("Disabled");
+            vilSnapshotRepository.save(snapshotTrigger1);
+        }else {
+            snapshotTrigger1.setTriggerStatus("Status Error");
+            vilSnapshotRepository.save(snapshotTrigger1);
+            statusResponseDto.setErrorMessage("error occured while processing");
+            statusResponseDto.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+        return statusResponseDto;
+    }
 
 }

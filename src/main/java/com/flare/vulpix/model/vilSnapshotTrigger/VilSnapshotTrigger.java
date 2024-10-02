@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class VilSnapshotTrigger {
 
     @Id
-    String id;
+    Long id;
 
     @NotNull(message = "Model year should not be null")
     @Size(min = 4, max = 4, message = "max length should be 4")
