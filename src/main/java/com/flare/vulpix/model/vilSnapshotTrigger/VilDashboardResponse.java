@@ -6,10 +6,12 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
-@Data
-@Builder
+
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VilDashboardResponse extends StatusResponseDto {
     List<VilSnapshotTrigger> vilSnapshotTriggers;

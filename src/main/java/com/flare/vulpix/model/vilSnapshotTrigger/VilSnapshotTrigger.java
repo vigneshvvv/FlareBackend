@@ -18,8 +18,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VilSnapshotTrigger {
 
+    //The id should be string in order to autogenerate the id in mongoDB
     @Id
-    Long id;
+    String id;
 
     @NotNull(message = "Model year should not be null")
     @Size(min = 4, max = 4, message = "max length should be 4")

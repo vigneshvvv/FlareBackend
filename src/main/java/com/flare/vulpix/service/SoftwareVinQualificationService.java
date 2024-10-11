@@ -94,7 +94,7 @@ public class SoftwareVinQualificationService {
                 for (NodeDetail nodeDetail : nodeDetails) {
                     if (Objects.equals(updateConstructDcOnlyContent.getModule().getCanREceptionId(), nodeDetail.getNodeAddr())) {
                         for (DidDetail didDetail : nodeDetail.getDidDetails()) {
-                            if (didDetail.getDidValue() == "F188") {
+                            if (Objects.equals(didDetail.getDidValue(), "F188")) {
                                 configRequests.add(ConfigRequest.builder().partNumber(didDetail.getDidResponseList().get(0)).configGuid(updateConstructDcOnlyContent.getDcReplacementConfigGuid()).build());
                             }
                         }

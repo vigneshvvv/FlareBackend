@@ -63,7 +63,7 @@ public class VilSnapshotTriggerService {
 
     public StatusResponseDto editVilSnapshot(VilSnapshotTrigger vilSnapshotTrigger){
         StatusResponseDto statusResponseDto = StatusResponseDto.builder().status(HttpStatus.OK.value()).build();
-        Optional<VilSnapshotTrigger> snapshotTrigger = vilSnapshotRepository.findById(vilSnapshotTrigger.getId());
+        Optional<VilSnapshotTrigger> snapshotTrigger = vilSnapshotRepository.findVilSnapshotTriggerById(vilSnapshotTrigger.getId());
         VilSnapshotTrigger snapshotTrigger1 = snapshotTrigger.get();
         snapshotTrigger1.setModelYear(vilSnapshotTrigger.getModelYear());
         snapshotTrigger1.setProgramCode(vilSnapshotTrigger.getProgramCode());
