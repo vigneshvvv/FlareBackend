@@ -1,0 +1,5 @@
+FROM openjdk:11
+ARG JAR_FILE=build/libs/FlareBackend.jar
+COPY ${JAR_File} flareBackend-d.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/flareBackend-d.jar"]
