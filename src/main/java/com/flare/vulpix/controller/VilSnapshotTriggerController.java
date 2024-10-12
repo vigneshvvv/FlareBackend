@@ -46,4 +46,14 @@ public class VilSnapshotTriggerController {
     public ResponseEntity<VilDashboardResponse> getVilSnapshot(){
         return new ResponseEntity<>(vilSnapshotTriggerService.getTriggers(), HttpStatus.OK);
     }
+
+    @GetMapping("/api/sampleDocker")
+    @ApiOperation(value = "get vilsnapshot")
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "200 ok", response = VilDashboardResponse.class),
+            @ApiResponse(code = 0, message = "error")
+    })
+    public String getVilSnapshot(){
+        return "The sample Docker image of the java running correctly" ;
+    }
 }
