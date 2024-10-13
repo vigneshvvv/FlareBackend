@@ -1,6 +1,5 @@
 FROM openjdk:17
-RUN gradle clean build
-ARG JAR_FILE=build/libs/FlareBackend.jar
-COPY ${JAR_File} flareBackend-d.jar
+WORKDIR /app
+COPY vulpix-0.0.1-SNAPSHOT.jar /home/flareBackend-d.jar
+ENTRYPOINT java -jar /home/flareBackend-d.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/flareBackend-d.jar"]
