@@ -1,15 +1,13 @@
 package com.flare.vulpix.service;
 
 import com.flare.vulpix.exception.ServiceNotAvailableException;
-import com.flare.vulpix.model.ConfigRequest;
-import com.flare.vulpix.model.DidDetail;
-import com.flare.vulpix.model.NodeDetail;
-import com.flare.vulpix.model.VinMetaDataWrapperDetails;
+import com.flare.vulpix.model.*;
 import com.flare.vulpix.model.software.SoftwarePacakgeDetailCollection;
 import com.flare.vulpix.model.software.SoftwarePackagePrimaryKeys;
 import com.flare.vulpix.model.updateConstruct.UpdateConstructDcOnlyContent;
 import com.flare.vulpix.model.updateConstruct.UpdateConstructDetailCollection;
 import com.flare.vulpix.model.updateConstruct.UpdateConstructPrimaryKeys;
+import com.flare.vulpix.model.updateConstruct.UpdateContructDcOnlyElement;
 import com.flare.vulpix.repository.SoftwareV1CollectionRepository;
 import com.flare.vulpix.repository.UpdateConstructRepository;
 import lombok.AllArgsConstructor;
@@ -34,12 +32,21 @@ public class SoftwareVinQualificationService {
         SoftwarePacakgeDetailCollection softwarePacakgeDetailCollection = softwareV1CollectionRepository.findSoftwarePacakgeDetailCollectionsBySoftwarePackagePrimaryKeys(softwarePackagePrimaryKeys);
         List<UpdateConstructPrimaryKeys> updateConstructPrimaryKeys = new ArrayList<>();
         List<UpdateConstructDetailCollection> updateConstructDetailCollections = new ArrayList<>();
-        softwarePacakgeDetailCollection.getOrfinCosmosDocumentDto().getV4PackageSoftwareDetails().getDetails().getUpdateConstructDependencies().stream()
+        softwarePacakgeDetailCollection.getOrfinCosmosDocumentDto().getV4PackageSoftwareDetails().getDetails()
+                .getUpdateConstructDependencies().stream()
                 .map(updateConstructDependency -> updateConstructPrimaryKeys.add(UpdateConstructPrimaryKeys.builder().updateConstructId(updateConstructDependency.getUpdateConstructId()).updateConstructVersion(updateConstructDependency.getUpdateConstructVersion()).build()));
 
         for (UpdateConstructPrimaryKeys updateConstructPrimaryKey : updateConstructPrimaryKeys) {
             updateConstructDetailCollections.add(updateConstructRepository.findUpdateConstructDetailCollectionByUpdateConstructPrimaryKeys(updateConstructPrimaryKey));
         }
+//to iterate through the list of collection and fetch map only Dconly content
+
+        List<UpdateConstructDcOnlyContent> updateConstructDcOnlyContentsnew = updateConstructDetailCollections.stream()
+                .map(updateConstructDetailCollection -> updateConstructDetailCollection.getUpdateConstructDetailDocumentDto().getUpdateContructNotificationEvent().getUpdateContructDcOnlyElements())
+                .flatMap(updateContructDcOnlyElements -> updateContructDcOnlyElements.stream().map(UpdateContructDcOnlyElement::getUpdateConstructDcOnlyContents))
+                .flatMap(Collection::stream).collect(Collectors.toList());
+
+
 
         UpdateConstructDetailCollection updateConstructDetailCollection = updateConstructDetailCollections.get(0);
 
